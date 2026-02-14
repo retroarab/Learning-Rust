@@ -1,97 +1,98 @@
 use std::io::{self};
 #[derive(Clone)]
+
+// no more courses today, let me refactor this for learning experience
 enum Intrebare {
     Grila {
-        text: String,
-        variante: Vec<String>,
+        text: &'static str,
+        variante: Vec<&'static str>,
         corecta: usize,
     },
     Teorie {
-        text: String,
+        text: &'static str,
+        contine: &'static str,
     },
 }
-struct Grila {
-    intrebari: Vec<Intrebare>,
+
+impl Intrebare {
+    fn evalueaza_raspuns(&self) -> bool {
+        if let Intrebare::Grila {
+            text,
+            variante,
+            corecta,
+        } = &self
+        {
+            println!("{}", text);
+            for varianta in variante {
+                println!(" {}", varianta);
+            }
+            println!("Raspunsul tau este : ");
+            let mut raspuns = String::new();
+            io::stdin()
+                .read_line(&mut raspuns)
+                .expect("Nu se poate citi tot !");
+            let raspuns: usize = raspuns.trim().parse().expect("Nu e numar !");
+            if raspuns == *corecta {
+                return true;
+            }
+            false
+        } else if let Intrebare::Teorie { text, contine } = &self {
+            println!("{} \n Raspunsul tau complex este : ", text);
+            let mut temp = String::new();
+            io::stdin().read_line(&mut temp).expect("Nu merge !");
+            if temp.contains(contine) {
+                return true;
+            };
+            false
+        } else {
+            false
+        }
+    }
 }
 enum Examene {
-    Grila { examen: Grila },
+    Grila { intrebari: Vec<Intrebare> },
     Combinat { intrebari: Vec<Intrebare> },
 }
 
 impl Examene {
-    fn sustine_examen_grila(examen: &Grila) {
-        let mut nr_corecte = 0;
-        println!("Sustii acum examenul !");
-        for (i, intrebare) in examen.intrebari.iter().enumerate() {
-            if let Intrebare::Grila {
-                text,
-                variante,
-                corecta,
-            } = intrebare
-            {
-                println!("{}. {}", i + 1, text);
-                for varianta in variante {
-                    println!(" {}", varianta);
-                }
-                println!("Raspunsul tau este : ");
-                let mut raspuns = String::new();
-                io::stdin()
-                    .read_line(&mut raspuns)
-                    .expect("Nu se poate citi tot !");
-                let raspuns: usize = raspuns.trim().parse().expect("Nu e numar !");
-                if raspuns == *corecta {
-                    nr_corecte += 1;
-                };
-            }
+    fn get_intrebari(&self) -> &Vec<Intrebare> {
+        match self {
+            Examene::Grila { intrebari } | Examene::Combinat { intrebari } => intrebari,
         }
-        println!("Felicitari, ai rezolvat {} grile corecte !", nr_corecte)
-    }
-    fn sustine_examen_teorie(set_intrebari: &Vec<Intrebare>) {
-        let mut corect = 0;
-        for (i, intrebare) in set_intrebari.iter().enumerate() {
-            if let Intrebare::Teorie { text } = intrebare {
-                println!("{} \n\n Care este raspunsul tau ? : ", text);
-                let mut raspuns = String::new();
-                io::stdin()
-                    .read_line(&mut raspuns)
-                    .expect("Ooos ! S-a stricat");
-                if raspuns.contains("Raspunsul Surpriza") {
-                    corect += 1;
-                }
-            };
-        }
-        println!("Feclitiari, ai facut corect {} intrebari !", corect)
     }
     fn sustine_examen(&self) {
-        if let Examene::Grila { examen } = &self {
-            Self::sustine_examen_grila(&examen);
-        } else if let Examene::Combinat { intrebari } = &self {
-            Self::sustine_examen_teorie(intrebari);
+        let mut nr_corecte = 0;
+        for intrebare in self.get_intrebari() {
+            if intrebare.evalueaza_raspuns() {
+                nr_corecte += 1;
+            }
         }
+        println!("Scor: {}/{}", nr_corecte, self.get_intrebari().len());
     }
 }
 
 fn main() {
     let q1 = Intrebare::Grila {
-        text: "Ce este RUST ?".to_string(),
+        text: "Ce este RUST ?",
         variante: vec![
-            String::from("1. Habar nu am boss"),
-            String::from("2. Un limbaj de programre"),
-            String::from("3. Corect by default"),
+            "1. Habar nu am boss",
+            "2. Un limbaj de programre",
+            "3. Corect by default",
         ],
         corecta: (2),
     };
     let grila1 = Examene::Grila {
-        examen: Grila {
-            intrebari: vec![q1.clone()],
-        },
+        intrebari: vec![q1.clone()],
     };
+    println!("Primul exman !");
     grila1.sustine_examen();
     let q2 = Intrebare::Teorie {
-        text: String::from("O intrebare complet random ?"),
+        text: "O intrebare complet random ?",
+        contine: "Cheie!",
     };
     let combinat1 = Examene::Combinat {
         intrebari: vec![q1, q2],
     };
+    println!("Al doilea examen !");
     combinat1.sustine_examen();
 }
