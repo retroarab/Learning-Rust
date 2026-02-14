@@ -1,3 +1,1 @@
-# Learning-Rust
-# Learning-Rust
-# Learning-Rust
+Repo for learning Rust, baby steps
