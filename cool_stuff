@@ -1,0 +1,37 @@
+    pub fn transformer(input: Vec<(String, Command)>) -> Vec<String> {
+        input
+            .into_iter()
+            .map(|(mut text, command)| match command {
+                Command::Uppercase => text.to_ascii_uppercase(),
+                Command::Trim => text.trim().to_string(),
+                Command::Append(n) => {
+                    text.push_str(&"bar".repeat(n));
+                    text
+                }
+            })
+            .collect()
+    }
+}
+
+
+
+so this is I modified this from rustligns quiz 2 my inital solution 
+
+pub fn transformer(input: Vec<(String, Command)>) -> Vec<String> { 
+  let mut out = Vec::with_capacity(input.len());
+
+  for (mut text, commands) in input {
+    let transormed = match commands { 
+      Command::Uppercase => text.to_ascii_lowercase(), 
+      Command::Trim => text.trim().to_string(), 
+      Command::Append(usize) => { 
+        text.push_str("bar"); 
+        text 
+      } 
+    } 
+    out.push(transormed)
+  } 
+}
+
+
+first important thing is always prefer match, it allows compiler optimization, then the frist one is cleaner, more readable however this is trying to write idiomatic rust while learning so i'm not sure 

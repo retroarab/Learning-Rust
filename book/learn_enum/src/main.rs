@@ -13,7 +13,7 @@ enum Intrebare {
         contine: &'static str,
     },
 }
-
+// this should use match, right ? I think it's more optimized in compiler
 impl Intrebare {
     fn evalueaza_raspuns(&self) -> bool {
         if let Intrebare::Grila {
