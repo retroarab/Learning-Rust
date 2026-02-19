@@ -5,4 +5,10 @@ edition = "2024"
 
 [dependencies]
 axum = "0.8.8"
+dotenv = "0.15.0"
+sqlx = { version = "0.8.6", features = [
+  "sqlite",
+  "runtime-tokio-rustls",
+  "macros",
+] }
 tokio = { version = "1.49.0", features = ["full"] }
