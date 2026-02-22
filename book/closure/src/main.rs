@@ -41,6 +41,31 @@ fn main() {
     geenrate_workout(simultated_intensity, simultated_random_number);
 }
 
+fn _generate_workout_idiomatic(intensity: i32, random_number: i32) {
+    let expensive_closure = |num: u32| {
+        println!("Calculate expensive stuff!");
+        thread::sleep(Duration::from_secs(2));
+        num
+    };
+
+    let mut cacher = Cacher::new(expensive_closure);
+
+    if intensity < 25 {
+        println!(
+            "Today do {} push-ups!",
+            cacher.assign_idiomatic(intensity as u32)
+        );
+        println!(
+            "Also do {} pull ups!",
+            cacher.assign_idiomatic(intensity as u32)
+        );
+    } else if random_number == 3 {
+        println!("Azi pauza boss");
+    } else {
+        println!("Fugi {} minute!", cacher.assign_idiomatic(intensity as u32));
+    }
+}
+
 fn geenrate_workout(intesity: i32, rand_nubmer: i32) {
     let expsnv_closure = |num| {
         println!("Calucate expensive stuff !");
