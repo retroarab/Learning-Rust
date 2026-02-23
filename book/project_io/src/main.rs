@@ -1,16 +1,45 @@
-use std::env;
-fn examine_args(arguments: &Vec<String>) {
-    if arguments.len() < 2 {
-        println!("Usage is -- search file")
+use std::{
+    env,
+    error::Error,
+    fs,
+    process::{self, exit},
+};
+struct Config {
+    query: String,
+    file_path: String,
+}
+impl Config {
+    fn build(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
+            return Err("no mr. fish");
+        }
+        let query = args[1].clone();
+        let file_path = args[2].clone();
+        Ok(Config { query, file_path })
     }
-    if arguments.contains(&"-help".to_string()) {
-        println!("Help with what ?");
+}
+
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.file_path)?;
+
+    for line in search(&config.query, &contents) {
+        println!("{line}");
     }
+
+    Ok(())
+}
+fn search<'a>(searched_word: &str, file_text: &'a str) -> Vec<&'a str> {
+    file_text
+        .lines()
+        .filter(|line| line.contains(searched_word))
+        .collect()
 }
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    dbg!(&args); // this transfers them ?
-    examine_args(&args); // if at any point we want to change the usage showing or the
-    // help or anything this is done in one place only. TODO Implement rest
+    let config = Config::build(&args).unwrap_or_else(|err| {
+        println!("Erro parsing sir, good day ");
+        process::exit(1);
+    });
+    run(config);
 }
