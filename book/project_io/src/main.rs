@@ -38,8 +38,11 @@ fn search<'a>(searched_word: &str, file_text: &'a str) -> Vec<&'a str> {
 fn main() {
     let args: Vec<String> = env::args().collect();
     let config = Config::build(&args).unwrap_or_else(|err| {
-        println!("Erro parsing sir, good day ");
+        println!("Erro parsing sir, good day {}", err);
         process::exit(1);
     });
-    run(config);
+    run(config).unwrap_or_else(|err| {
+        println!("An error occured {}", err);
+        process::exit(1)
+    })
 }
