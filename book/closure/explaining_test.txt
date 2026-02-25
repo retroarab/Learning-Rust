@@ -1,0 +1,13 @@
+The test at the end also contain the smart pointers module, and I want to explain them quickly:
+
+1. 
+let calls = Rc::new(Cell::new(0));
+let calls2 = Rc::clone(&calls);
+So create a cell that allows you to modify what's inside even if it's not mutable. 2 methods used : .get() ( get the current value ) .set() (set what's inside of it the cell).
+calls and calls2 are refrence counting pointers to that Cell. so esentially calls1 and calls2 -> Cell(0).
+
+We create a closure that returns the value of the number +1 ( so when called with 1 it's 2 ).
+
+Create a cacher with that closure, so whenever our cacher needs to run the <T> function we will return number+1;
+
+and then we can test the calls to see that it correctly ran 2 times
