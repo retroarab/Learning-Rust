@@ -1,5 +1,4 @@
 use std::{collections::HashMap, thread, time::Duration};
-
 struct Cacher<T> {
     calculation: T,
     value: HashMap<u32, u32>,
@@ -36,11 +35,13 @@ where
 }
 
 fn main() {
+    let a = 5;
+    let b = a;
+    println!("{},{}", a, b);
     let simultated_intensity = 10;
     let simultated_random_number = 7;
     geenrate_workout(simultated_intensity, simultated_random_number);
 }
-
 fn _generate_workout_idiomatic(intensity: i32, random_number: i32) {
     let expensive_closure = |num: u32| {
         println!("Calculate expensive stuff!");
