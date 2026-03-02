@@ -17,7 +17,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 async fn testing_json() -> Json<String> {
-    Json("Muie".to_string())
+    Json("Test!".to_string())
 }
 
 async fn greet_user() -> String {
